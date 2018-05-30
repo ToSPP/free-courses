@@ -12,13 +12,13 @@ function answer(t1, t2) {
   h  = Math.floor(T / 3600);
   m  = Math.floor((T - h * 3600) / 60);
   s  = (T - h * 3600) % 60;
-  if (h > 0) result += h + " " + addSuffix(h, period[0]);
-  if (m > 0) result += " " + m + " " + addSuffix(m, period[1]);
+  if (h > 0) result += h + " " + addSuffix(h, period[0]) + " ";
+  if (m > 0) result += m + " " + addSuffix(m, period[1]) + " ";
   if (s > 0) {
     if (h > 0 && m == 0) {
-      result += " " + "0 " + period[1];
+      result += "0 " + period[1] + " ";
     }
-    result += " " + s + " " + addSuffix(s, period[2]);
+    result += s + " " + addSuffix(s, period[2]);
   }
   return result;
 }
