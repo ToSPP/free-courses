@@ -58,10 +58,15 @@ function toDecimalNotation(num, sn) {
   if (typeof decimal != "undefined") {
     sDecimal = decimal.split("");
     for (var k = 1; k <= sDecimal.length; k++) {
+      if (sn > 10) {
+        if (sDecimal[k - 1] in literals) {
+          sDecimal[k - 1] = literals[sDecimal[k - 1]];
+        }
+      }
       result += sDecimal[k - 1] * Math.pow(sn, -k);
     }
   }
-
+  result = Math.round(result * 100000000000) / 100000000000;
   return result;
 }
 
