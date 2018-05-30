@@ -1,8 +1,9 @@
 /* Task 1 */
 
-var i = parseFloat(process.argv[2]),
+var i = String(process.argv[2]).toUpperCase(),
     a = parseInt(process.argv[3]),
     b = parseInt(process.argv[4]);
+    i = i.replace(",", ".");
 
 var literals = {A: 10, B: 11, C: 12, D: 13, E: 14, F: 15, J: 16, H: 17, I: 18,
 	  	J: 19, K: 20, L: 21, M: 22, N: 23, O: 24, P: 25, Q: 26, R: 27,
@@ -10,8 +11,12 @@ var literals = {A: 10, B: 11, C: 12, D: 13, E: 14, F: 15, J: 16, H: 17, I: 18,
 
 function answer(i, a, b) {
   var result, temp;
-  if (a == 10) {
+  if (a == 10 && b == 10) {
+    result = i;
+  } else if (a == 10) {
     result = fromDecimalNotation(i, b);
+  } else if (b == 10) {
+    result = toDecimalNotation(i, a);
   } else {
     temp   = toDecimalNotation(i, a);
     result = fromDecimalNotation(temp, b);
@@ -20,7 +25,9 @@ function answer(i, a, b) {
 }
 
 if (isNumeric(a) && isNumeric(b)) {
-  if (i >= 0 && i <= 10000 && a >= 1 && b <= 36) {
+  var i_temp;
+  (a !== 10) ? i_temp = toDecimalNotation(i, a) : i_temp = i;
+  if (i_temp >= 0 && i_temp <= 10000 && a >= 1 && b <= 36) {
     process.stdout.write(String(answer(i, a, b)));
   }
 }
@@ -32,7 +39,7 @@ function isNumeric(n) {
 function toDecimalNotation(num, sn) {
   var result  = 0,
       sNum    = String(num);
-  sNum = sNum.split(/[,.]/);
+  sNum = sNum.split(".");
   var floor   = sNum[0],
       decimal = sNum[1],
       sFloor, 
@@ -40,7 +47,7 @@ function toDecimalNotation(num, sn) {
     	
   sFloor = floor.split("").reverse();
   for (var j = sFloor.length - 1; j >= 0; j--) {
-    if (sn >= 10) {
+    if (sn > 10) {
       if (sFloor[j] in literals) {
 	sFloor[j] = literals[sFloor[j]];
       }
@@ -61,7 +68,7 @@ function toDecimalNotation(num, sn) {
 function fromDecimalNotation(num, sn) {
   var result      = 0,
       sNum        = String(num);
-  sNum = sNum.split(/[,.]/);
+  sNum = sNum.split(".");
   var floor       = sNum[0],
       decimal     = sNum[1],
       dividend    = parseInt(floor), 
@@ -73,7 +80,7 @@ function fromDecimalNotation(num, sn) {
 	    
   while (dividend !== 0) {
     mod = dividend % sn;
-    if (sn >= 10) {
+    if (sn > 10) {
       mod = search(mod);
     }
     new_floor.push(mod);
@@ -82,7 +89,7 @@ function fromDecimalNotation(num, sn) {
 	
   while (fraction !== 0) {
     part = Math.floor(fraction * sn);
-    if (sn >= 10) {
+    if (sn > 10) {
       part = search(part);
     }
     new_decimal.push(part);
