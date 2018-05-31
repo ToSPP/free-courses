@@ -7,8 +7,14 @@ var period = ["час", "минут", "секунд"];
 var suffix = ["а", "ы", "ов"];
 
 function answer(t1, t2) {
-  var result = "", T, h, m, s;
+  var result = "", 
+      negative = false, 
+      T, h, m, s;
   T  = t1 + t2;
+  if (T < 0) {
+    negative = true;
+    T *= (-1);
+  }
   h  = Math.floor(T / 3600);
   m  = Math.floor((T - h * 3600) / 60);
   s  = (T - h * 3600) % 60;
@@ -20,7 +26,7 @@ function answer(t1, t2) {
     }
     result += s + " " + addSuffix(s, period[2]);
   }
-  return result;
+  return (negative) ? ("-" + result) : (result);
 }
 
 if (t1 >= 1 && t2 <= 100000) {
