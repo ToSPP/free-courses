@@ -1,9 +1,9 @@
 /* Task 1 */
 
-var i = String(process.argv[2]).toUpperCase(),
-    a = parseInt(process.argv[3]),
-    b = parseInt(process.argv[4]);
-    i = i.replace(",", ".");
+var i   = String(process.argv[2]).toUpperCase(),
+    a   = parseInt(process.argv[3]),
+    b   = parseInt(process.argv[4]);
+    ind = i.search(/[,.]/);
 
 var literals = {A: 10, B: 11, C: 12, D: 13, E: 14, F: 15, J: 16, H: 17, I: 18,
 	  	J: 19, K: 20, L: 21, M: 22, N: 23, O: 24, P: 25, Q: 26, R: 27,
@@ -27,7 +27,7 @@ function answer(i, a, b) {
 if (isNumeric(a) && isNumeric(b)) {
   var i_temp;
   (a !== 10) ? i_temp = toDecimalNotation(i, a) : i_temp = i;
-  if (i_temp >= 0 && i_temp <= 10000 && a >= 1 && b <= 36) {
+  if (i_temp >= 0 && i_temp <= 10000 && a >= 2 && b <= 36 && ind == -1) {
     process.stdout.write(String(answer(i, a, b)));
   }
 }
@@ -37,78 +37,40 @@ function isNumeric(n) {
 }
 
 function toDecimalNotation(num, sn) {
-  var result  = 0,
-      sNum    = String(num);
-  sNum = sNum.split(".");
-  var floor   = sNum[0],
-      decimal = sNum[1],
-      sFloor, 
-      sDecimal;
-    	
-  sFloor = floor.split("").reverse();
-  for (var j = sFloor.length - 1; j >= 0; j--) {
+  var result = 0,
+      sNum   = String(num);
+      aNum   = sNum.split("").reverse();
+
+  for (var j = aNum.length - 1; j >= 0; j--) {
     if (sn > 10) {
-      if (sFloor[j] in literals) {
-	sFloor[j] = literals[sFloor[j]];
+      if (aNum[j] in literals) {
+	aNum[j] = literals[aNum[j]];
       }
     } 
-    result += sFloor[j] * Math.pow(sn, j);
-  }
-	
-  if (typeof decimal != "undefined") {
-    sDecimal = decimal.split("");
-    for (var k = 1; k <= sDecimal.length; k++) {
-      if (sn > 10) {
-        if (sDecimal[k - 1] in literals) {
-          sDecimal[k - 1] = literals[sDecimal[k - 1]];
-        }
-      }
-      result += sDecimal[k - 1] * Math.pow(sn, -k);
-    }
-  }
-  result = Math.round(result * 100000000000) / 100000000000;
+    result += aNum[j] * Math.pow(sn, j);
+  }	
   return result;
 }
 
 function fromDecimalNotation(num, sn) {
-  var result      = 0,
-      sNum        = String(num);
-  sNum = sNum.split(".");
-  var floor       = sNum[0],
-      decimal     = sNum[1],
-      dividend    = parseInt(floor), 
-      fraction    = parseFloat("0." + decimal),
-      new_floor   = [], 
-      new_decimal = [],
-      mod, 
-      part;
+  var sNum      = String(num);
+      dividend  = parseInt(sNum), 
+      new_floor = [], 
+      mod       = 0;
 	    
   while (dividend !== 0) {
     mod = dividend % sn;
     if (sn > 10) {
       mod = search(mod);
     }
+    dividend = ((dividend / sn) > 0) ? Math.floor(dividend / sn) : Math.ceil(dividend / sn); 
+    if (mod < 0) {
+      mod += (sn * (-1));
+      dividend += 1;
+    }
     new_floor.push(mod);
-    dividend = Math.floor(dividend / sn);
-  }
-	
-  while (fraction !== 0) {
-    part = Math.floor(fraction * sn);
-    if (sn > 10) {
-      part = search(part);
-    }
-    new_decimal.push(part);
-    fraction = fraction * sn - Math.floor(fraction * sn);
-    if (new_decimal.length > 10) {
-      fraction = 0;
-    }
-  }
-	
-  new_floor   = new_floor.reverse().join("");
-  new_decimal = new_decimal.join("");
-  result      = (new_decimal) ? new_floor + "." + new_decimal : new_floor;
-
-  return result;
+  }		
+  return new_floor.reverse().join("");
 }
 
 function search(num) {
