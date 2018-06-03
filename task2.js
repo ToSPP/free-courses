@@ -1,6 +1,6 @@
-var d = parseInt(process.argv[1]),
-    m = String(process.argv[2]),
-    y = parseInt(process.argv[3]);
+var d = parseInt(process.argv[2]),
+    m = String(process.argv[3]),
+    y = parseInt(process.argv[4]);
 
 var months = ["января",   "февраля", "марта",  "апреля",
               "мая",      "июня",    "июля",   "августа",
