@@ -1,4 +1,3 @@
-/*
 var i   = String(process.argv[2]).toUpperCase(),
     a   = parseInt(process.argv[3]),
     b   = parseInt(process.argv[4]);
