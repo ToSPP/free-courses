@@ -1,3 +1,4 @@
+/**
 var t1 = parseInt(process.argv[2]),
     t2 = parseInt(process.argv[3]);
 
