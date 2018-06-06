@@ -1,11 +1,15 @@
-var i   = String(process.argv[2]).toUpperCase(),
+var i   = String(process.argv[2]).toLowerCase(),
     a   = parseInt(process.argv[3]),
     b   = parseInt(process.argv[4]);
-    ind = i.search(/[,.]/);
 
-var literals = {A: 10, B: 11, C: 12, D: 13, E: 14, F: 15, J: 16, H: 17, I: 18,
-	  	J: 19, K: 20, L: 21, M: 22, N: 23, O: 24, P: 25, Q: 26, R: 27,
-		S: 28, T: 29, U: 30, V: 31, W: 32, X: 33, Y: 34, Z: 35};
+var literals = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 
+                'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+
+var i_temp;
+(a !== 10) ? i_temp = toDecimalNotation(i, a) : i_temp = i;
+if (i_temp >= 0 && i_temp <= 10000 && a >= 2 && b <= 36) {
+    process.stdout.write(answer(i, a, b));
+}
 
 function answer(i, a, b) {
   var result, temp;
@@ -22,61 +26,27 @@ function answer(i, a, b) {
   return result;
 }
 
-if (isNumeric(a) && isNumeric(b)) {
-  var i_temp;
-  (a !== 10) ? i_temp = toDecimalNotation(i, a) : i_temp = i;
-  if (i_temp >= 0 && i_temp <= 10000 && a >= 2 && b <= 36 && ind == -1) {
-    process.stdout.write(String(answer(i, a, b)));
-  }
-}
-
-function isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}
-
 function toDecimalNotation(num, sn) {
-  var result = 0,
-      sNum   = String(num);
-      aNum   = sNum.split("").reverse();
-
-  for (var j = aNum.length - 1; j >= 0; j--) {
-    if (sn > 10) {
-      if (aNum[j] in literals) {
-	aNum[j] = literals[aNum[j]];
-      }
-    } 
-    result += aNum[j] * Math.pow(sn, j);
-  }	
-  return result;
+  var result = 0, a = 0;
+  for (var j = 0; j < num.length; j++) {
+    a = (sn > 10 && literals.indexOf(num.substr(j, 1)) != -1) ? literals.indexOf(num.substr(j, 1)) + 10 : num.substr(j, 1);
+    result += a * Math.pow(sn, num.length - 1 - j);
+  } 
+  return result.toString();
 }
 
 function fromDecimalNotation(num, sn) {
-  var sNum      = String(num);
-      dividend  = parseInt(sNum), 
-      new_floor = [], 
-      mod       = 0;
-	    
+  var dividend  = parseInt(num), 
+      result    = [], 
+      remainder = 0;     
   while (dividend !== 0) {
-    mod = dividend % sn;
-    if (sn > 10) {
-      mod = search(mod);
+    remainder = (sn > 10 && ((dividend % sn) > 10)) ? literals[(dividend % sn) - 10] : dividend % sn; 
+    dividend  = ((dividend / sn) > 0) ? Math.floor(dividend / sn) : Math.ceil(dividend / sn); 
+    if (remainder < 0) {
+      remainder += (sn * (-1));
+      dividend  += 1;
     }
-    dividend = ((dividend / sn) > 0) ? Math.floor(dividend / sn) : Math.ceil(dividend / sn); 
-    if (mod < 0) {
-      mod += (sn * (-1));
-      dividend += 1;
-    }
-    new_floor.push(mod);
-  }		
-  return new_floor.reverse().join("");
-}
-
-function search(num) {
-  for (var key in literals) {
-    if (num == literals[key]) {
-      num = key;
-      break;
-    }
-  }
-  return num;
+    result.push(remainder);
+  }   
+  return result.reverse().join("").toString();
 }
