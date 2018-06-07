@@ -1,4 +1,3 @@
-/*
 var d = parseInt(process.argv[2]),
     m = String(process.argv[3]),
     y = parseInt(process.argv[4]);
